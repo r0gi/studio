@@ -11,9 +11,10 @@
 //   found at http://www.apache.org/licenses/LICENSE-2.0
 //   You may not use this file except in compliance with the License.
 
-import { Link, Text, TextField } from "@fluentui/react";
-import { Stack } from "@mui/material";
+import { TextField } from "@fluentui/react";
+import { Link, Typography } from "@mui/material";
 
+import Stack from "@foxglove/studio-base/components/Stack";
 import isDesktopApp from "@foxglove/studio-base/util/isDesktopApp";
 
 import { TopicSettingsEditorProps } from ".";
@@ -45,13 +46,13 @@ export default function UrdfSettingsEditor(
         }}
       />
       {!supportsPackageUrl && (
-        <Text block as="p">
+        <Typography>
           For ROS users, we also support package:// URLs (loaded from the local filesystem) in our{" "}
           <Link href="https://foxglove.dev/download" target="_blank" rel="noreferrer">
             desktop app
           </Link>
           .
-        </Text>
+        </Typography>
       )}
     </Stack>
   );
