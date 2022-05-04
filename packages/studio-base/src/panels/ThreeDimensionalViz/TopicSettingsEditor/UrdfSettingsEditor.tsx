@@ -48,7 +48,13 @@ export default function UrdfSettingsEditor(
       {!supportsPackageUrl && (
         <Typography>
           For ROS users, we also support package:// URLs (loaded from the local filesystem) in our{" "}
-          <Link href="https://foxglove.dev/download" target="_blank" rel="noreferrer">
+          <Link
+            href="https://foxglove.dev/download"
+            color="primary"
+            target="_blank"
+            underline="hover"
+            rel="noreferrer"
+          >
             desktop app
           </Link>
           .
