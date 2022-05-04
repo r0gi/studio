@@ -106,7 +106,7 @@ function ExperimentalFeatureItem(props: { feature: Feature }) {
         <Checkbox
           onRenderLabel={() => {
             return (
-              <Stack gap={0.5} paddingLeft={0.5}>
+              <Stack gap={0.25} paddingLeft={0.5}>
                 <Typography fontWeight={600}>{feature.name}</Typography>
                 <Typography variant="body2" color="text.secondary">
                   {feature.description}
