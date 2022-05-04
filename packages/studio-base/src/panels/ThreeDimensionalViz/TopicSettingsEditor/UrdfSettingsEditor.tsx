@@ -37,7 +37,7 @@ export default function UrdfSettingsEditor(
     : "http(s) URL pointing to a Unified Robot Description Format (URDF) XML file";
 
   return (
-    <Stack flex="auto">
+    <Stack flex="auto" gap={1}>
       <TextField
         label={descriptionString}
         value={settings.urdfUrl ?? ""}
