@@ -66,14 +66,22 @@ export function LaunchingInDesktopScreen(): ReactElement {
         <Typography align="center" variant="h2">
           Launching Foxglove Studio…
         </Typography>
-        <Typography align="center">We’ve directed you to the desktop app.</Typography>
+        <Typography align="center" fontWeight={600}>
+          We’ve directed you to the desktop app.
+        </Typography>
         <Stack gap={0.5}>
           <Typography align="center">
-            You can also <Link onClick={openWeb}>open this link in your browser</Link>.
+            You can also{" "}
+            <Link color="primary" underline="hover" onClick={openWeb}>
+              open this link in your browser
+            </Link>
+            .
           </Typography>
           <Typography align="center">
             Don’t have the app installed?&nbsp;
-            <Link href="https://foxglove.dev/download">Download Foxglove Studio</Link>
+            <Link color="primary" underline="hover" href="https://foxglove.dev/download">
+              Download Foxglove Studio
+            </Link>
           </Typography>
         </Stack>
       </Stack>
