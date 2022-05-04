@@ -63,7 +63,7 @@ export function LaunchingInDesktopScreen(): ReactElement {
         gap={2.5}
         style={{ maxWidth: 480 }}
       >
-        <Typography align="center" variant="h2">
+        <Typography align="center" variant="h2" fontWeight={600}>
           Launching Foxglove Studio…
         </Typography>
         <Typography align="center" fontWeight={600}>
