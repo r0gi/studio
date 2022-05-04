@@ -27,7 +27,7 @@ export default function CopyMessageButton({ text, data }: Props): JSX.Element {
   );
 
   return (
-    <Link onClick={onClick} href="#">
+    <Link color="primary" underline="none" onClick={onClick} href="#">
       <Icon tooltip="Copy entire message to clipboard" style={{ position: "relative", top: -1 }}>
         <ClipboardOutlineIcon style={{ verticalAlign: "middle" }} />
       </Icon>{" "}

@@ -47,7 +47,8 @@ export default function Metadata({
     <SMetadata>
       {!diffMessage && datatype && (
         <Link
-          style={{ color: "inherit" }}
+          color="inherit"
+          underline="hover"
           rel="noopener noreferrer"
           href={getMessageDocumentationLink(datatype)}
         >
