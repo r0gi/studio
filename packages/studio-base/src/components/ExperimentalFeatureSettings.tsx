@@ -108,7 +108,9 @@ function ExperimentalFeatureItem(props: { feature: Feature }) {
             return (
               <Stack gap={0.5} paddingLeft={0.5}>
                 <Typography fontWeight={600}>{feature.name}</Typography>
-                <Typography color="text.secondary">{feature.description}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {feature.description}
+                </Typography>
               </Stack>
             );
           }}
