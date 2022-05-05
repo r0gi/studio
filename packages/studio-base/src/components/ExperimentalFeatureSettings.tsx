@@ -101,7 +101,6 @@ function ExperimentalFeatureItem(props: { feature: Feature }) {
 
   const [enabled, setEnabled] = useAppConfigurationValue<boolean>(feature.key);
   return (
-<<<<<<< HEAD
     <Stack gap={2}>
       <Stack flexGrow={1} gap={0.5}>
         <Checkbox
@@ -125,47 +124,10 @@ function ExperimentalFeatureItem(props: { feature: Feature }) {
           }}
         />
       </Stack>
-=======
-    <Stack flexGrow={1} gap={0.5}>
-      <Checkbox
-        onRenderLabel={() => (
-          <Stack gap={0.5} paddingLeft={0.5}>
-            <Typography fontWeight={600}>{feature.name}</Typography>
-            <Typography color="text.secondary" variant="body2">
-              {feature.description}
-            </Typography>
-          </Stack>
-        )}
-        checked={enabled}
-        onChange={(_, checked) => void setEnabled(checked)}
-        styles={{
-          text: {
-            minWidth: 60,
-          },
-          label: { alignItems: "baseline" },
-        }}
-      />
->>>>>>> 5d38ebe0 (Remove text and link components)
     </Stack>
   );
 }
 
-<<<<<<< HEAD
-export function ExperimentalFeatureSettings(): React.ReactElement {
-  return (
-    <Stack gap={2}>
-      {features.length === 0 && (
-        <Typography>
-          <em>Currently there are no experimental features.</em>
-        </Typography>
-      )}
-      {features.map((feature) => (
-        <ExperimentalFeatureItem key={feature.key} feature={feature} />
-      ))}
-    </Stack>
-  );
-}
-=======
 export const ExperimentalFeatureSettings = (): React.ReactElement => (
   <Stack gap={2}>
     {features.length === 0 && (
@@ -176,4 +138,3 @@ export const ExperimentalFeatureSettings = (): React.ReactElement => (
     ))}
   </Stack>
 );
->>>>>>> 5d38ebe0 (Remove text and link components)
