@@ -11,10 +11,10 @@
 //   found at http://www.apache.org/licenses/LICENSE-2.0
 //   You may not use this file except in compliance with the License.
 
-import { useTheme, Link, Spinner, SpinnerSize } from "@fluentui/react";
+import { useTheme, Spinner, SpinnerSize } from "@fluentui/react";
 import ArrowLeftIcon from "@mdi/svg/svg/arrow-left.svg";
 import PlusIcon from "@mdi/svg/svg/plus.svg";
-import { Box, Input, Stack } from "@mui/material";
+import { Box, Link, Input, Stack } from "@mui/material";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -140,7 +140,6 @@ const WelcomeScreen = ({ addNewNode }: { addNewNode: (code?: string) => void }) 
       <TextContent>
         Welcome to Node Playground! Get started by reading the{" "}
         <Link
-          href=""
           onClick={(e) => {
             e.preventDefault();
             setHelpInfo({ title: "NodePlayground", content: helpContent });
