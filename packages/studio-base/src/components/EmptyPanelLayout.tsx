@@ -20,6 +20,7 @@ import { useDrop } from "react-dnd";
 import { MosaicDragType } from "react-mosaic-component";
 
 import PanelList, { PanelSelection } from "@foxglove/studio-base/components/PanelList";
+import Stack from "@foxglove/studio-base/components/Stack";
 import { useCurrentLayoutActions } from "@foxglove/studio-base/context/CurrentLayoutContext";
 import { MosaicDropResult } from "@foxglove/studio-base/types/panels";
 import { getPanelIdForType } from "@foxglove/studio-base/util/layout";
@@ -29,11 +30,6 @@ type Props = {
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
-  content: {
-    display: "flex",
-    flexDirection: "column",
-    paddingBottom: theme.spacing(2),
-  },
   root: {
     width: "100%",
     height: "100%",
@@ -90,7 +86,7 @@ export const EmptyPanelLayout = ({ tabId }: Props): JSX.Element => {
       })}
     >
       <div className={classes.root}>
-        <div className={classes.content}>
+        <Stack paddingBottom={2}>
           <Typography variant="body2" paddingX={2} paddingTop={2}>
             Select a panel below to add it to your layout.{" "}
             <Link
@@ -102,7 +98,7 @@ export const EmptyPanelLayout = ({ tabId }: Props): JSX.Element => {
             </Link>
           </Typography>
           <PanelList mode="grid" onPanelSelect={onPanelSelect} />
-        </div>
+        </Stack>
       </div>
     </div>
   );
