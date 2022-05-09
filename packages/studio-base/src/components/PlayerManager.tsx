@@ -40,6 +40,7 @@ import PlayerSelectionContext, {
   PlayerSelection,
 } from "@foxglove/studio-base/context/PlayerSelectionContext";
 import { useUserNodeState } from "@foxglove/studio-base/context/UserNodeStateContext";
+import { SAMPLE_DATA_SOURCE_LAYOUT_NAME } from "@foxglove/studio-base/dataSources/SampleNuscenesDataSourceFactory";
 import { useAppConfigurationValue } from "@foxglove/studio-base/hooks/useAppConfigurationValue";
 import { GlobalVariables } from "@foxglove/studio-base/hooks/useGlobalVariables";
 import useIndexedDbRecents from "@foxglove/studio-base/hooks/useIndexedDbRecents";
@@ -159,21 +160,25 @@ export default function PlayerManager(props: PropsWithChildren<PlayerManagerProp
         setBasePlayer(newPlayer);
 
         if (foundSource.sampleLayout) {
-          layoutStorage
-            .saveNewLayout({
-              name: foundSource.displayName,
-              data: foundSource.sampleLayout,
-              permission: "CREATOR_WRITE",
-            })
-            .then((newLayout) => {
-              if (!isMounted()) {
-                return;
-              }
-              setSelectedLayoutId(newLayout.id);
-            })
-            .catch((err) => {
-              addToast((err as Error).message, { appearance: "error" });
-            });
+          try {
+            const layouts = await layoutStorage.getLayouts();
+            let sourceLayout = layouts.find(
+              (layout) => layout.name === SAMPLE_DATA_SOURCE_LAYOUT_NAME,
+            );
+            if (sourceLayout == undefined) {
+              sourceLayout = await layoutStorage.saveNewLayout({
+                name: foundSource.displayName,
+                data: foundSource.sampleLayout,
+                permission: "CREATOR_WRITE",
+              });
+            }
+
+            if (isMounted()) {
+              setSelectedLayoutId(sourceLayout.id);
+            }
+          } catch (err) {
+            addToast((err as Error).message, { appearance: "error" });
+          }
         }
 
         return;
