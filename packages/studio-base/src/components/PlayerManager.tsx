@@ -40,7 +40,6 @@ import PlayerSelectionContext, {
   PlayerSelection,
 } from "@foxglove/studio-base/context/PlayerSelectionContext";
 import { useUserNodeState } from "@foxglove/studio-base/context/UserNodeStateContext";
-import { SAMPLE_DATA_SOURCE_LAYOUT_NAME } from "@foxglove/studio-base/dataSources/SampleNuscenesDataSourceFactory";
 import { useAppConfigurationValue } from "@foxglove/studio-base/hooks/useAppConfigurationValue";
 import { GlobalVariables } from "@foxglove/studio-base/hooks/useGlobalVariables";
 import useIndexedDbRecents from "@foxglove/studio-base/hooks/useIndexedDbRecents";
@@ -162,9 +161,7 @@ export default function PlayerManager(props: PropsWithChildren<PlayerManagerProp
         if (foundSource.sampleLayout) {
           try {
             const layouts = await layoutStorage.getLayouts();
-            let sourceLayout = layouts.find(
-              (layout) => layout.name === SAMPLE_DATA_SOURCE_LAYOUT_NAME,
-            );
+            let sourceLayout = layouts.find((layout) => layout.name === foundSource.displayName);
             if (sourceLayout == undefined) {
               sourceLayout = await layoutStorage.saveNewLayout({
                 name: foundSource.displayName,

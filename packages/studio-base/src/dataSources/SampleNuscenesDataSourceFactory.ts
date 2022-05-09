@@ -15,12 +15,10 @@ import { getSeekToTime } from "@foxglove/studio-base/util/time";
 
 import * as SampleNuscenesLayout from "./SampleNuscenesLayout.json";
 
-export const SAMPLE_DATA_SOURCE_LAYOUT_NAME = "Sample: Nuscenes";
-
 class SampleNuscenesDataSourceFactory implements IDataSourceFactory {
   id = "sample-nuscenes";
   type: IDataSourceFactory["type"] = "sample";
-  displayName = SAMPLE_DATA_SOURCE_LAYOUT_NAME;
+  displayName = "Sample: Nuscenes";
   iconName: IDataSourceFactory["iconName"] = "FileASPX";
   hidden = true;
   sampleLayout = SampleNuscenesLayout as IDataSourceFactory["sampleLayout"];
