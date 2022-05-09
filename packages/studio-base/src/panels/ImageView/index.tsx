@@ -17,9 +17,10 @@ import { Stack, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import cx from "classnames";
 import produce from "immer";
-import { set } from "lodash";
+import { difference, set, union } from "lodash";
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 
+import { Topic } from "@foxglove/studio";
 import { useDataSourceInfo } from "@foxglove/studio-base/PanelAPI";
 import Icon from "@foxglove/studio-base/components/Icon";
 import { useMessagePipeline } from "@foxglove/studio-base/components/MessagePipeline";
@@ -28,6 +29,7 @@ import { usePanelContext } from "@foxglove/studio-base/components/PanelContext";
 import PanelToolbar from "@foxglove/studio-base/components/PanelToolbar";
 import {
   SettingsTreeAction,
+  SettingsTreeField,
   SettingsTreeNode,
 } from "@foxglove/studio-base/components/SettingsTreeEditor/types";
 import { usePanelSettingsTreeUpdate } from "@foxglove/studio-base/providers/PanelSettingsEditorContextProvider";
@@ -104,10 +106,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-function buildSettingsTree(config: Config): SettingsTreeNode {
+function buildSettingsTree(
+  config: Config,
+  imageTopics: readonly Topic[],
+  allMarkerTopics: readonly string[],
+  enabledMarkerTopics: readonly string[],
+): SettingsTreeNode {
+  const markerFields: Record<string, SettingsTreeField> = Object.fromEntries(
+    [...allMarkerTopics]
+      .sort()
+      .map((topic) => [
+        topic,
+        { input: "boolean", label: topic, value: enabledMarkerTopics.includes(topic) },
+      ]),
+  );
+
   return {
     label: "General",
     fields: {
+      cameraTopic: {
+        label: "Camera Topic",
+        input: "select",
+        value: config.cameraTopic,
+        options: imageTopics.map((topic) => ({ label: topic.name, value: topic.name })),
+      },
       transformMarkers: {
         input: "boolean",
         label: "Synchronize Markers",
@@ -150,6 +172,12 @@ function buildSettingsTree(config: Config): SettingsTreeNode {
         label: "Maximum Value (depth images)",
         placeholder: "10000",
         value: config.maxValue,
+      },
+    },
+    children: {
+      markers: {
+        label: "Markers",
+        fields: markerFields,
       },
     },
   };
@@ -198,25 +226,23 @@ function ImageView(props: Props) {
 
   const actionHandler = useCallback(
     (action: SettingsTreeAction) => {
+      const { path, value } = action.payload;
       saveConfig(
         produce(config, (draft) => {
-          set(draft, action.payload.path, action.payload.value);
+          if (path[0] === "markers") {
+            const markerTopic = path[1] ?? "unknown";
+            const newValue =
+              value === true
+                ? union(draft.enabledMarkerTopics, [markerTopic])
+                : difference(draft.enabledMarkerTopics, [markerTopic]);
+            draft.enabledMarkerTopics = newValue;
+          } else {
+            set(draft, path, value);
+          }
         }),
       );
     },
     [config, saveConfig],
-  );
-
-  useEffect(() => {
-    updatePanelSettingsTree(panelId, {
-      actionHandler,
-      settings: buildSettingsTree(config),
-    });
-  }, [actionHandler, config, panelId, updatePanelSettingsTree]);
-
-  const relatedAnnotationTopics = useMemo(
-    () => getMarkerOptions(cameraTopic, topics, ANNOTATION_DATATYPES),
-    [cameraTopic, topics],
   );
 
   const allAnnotationTopics = useMemo(() => {
@@ -224,6 +250,26 @@ function ImageView(props: Props) {
       .filter((topic) => (ANNOTATION_DATATYPES as readonly string[]).includes(topic.datatype))
       .map((topic) => topic.name);
   }, [topics]);
+
+  useEffect(() => {
+    updatePanelSettingsTree(panelId, {
+      actionHandler,
+      settings: buildSettingsTree(config, allImageTopics, allAnnotationTopics, enabledMarkerTopics),
+    });
+  }, [
+    actionHandler,
+    allAnnotationTopics,
+    allImageTopics,
+    config,
+    enabledMarkerTopics,
+    panelId,
+    updatePanelSettingsTree,
+  ]);
+
+  const relatedAnnotationTopics = useMemo(
+    () => getMarkerOptions(cameraTopic, topics, ANNOTATION_DATATYPES),
+    [cameraTopic, topics],
+  );
 
   const onChangeCameraTopic = useCallback(
     (newCameraTopic: string) => {
