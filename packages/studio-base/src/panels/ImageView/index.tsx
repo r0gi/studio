@@ -29,7 +29,6 @@ import { usePanelContext } from "@foxglove/studio-base/components/PanelContext";
 import PanelToolbar from "@foxglove/studio-base/components/PanelToolbar";
 import {
   SettingsTreeAction,
-  SettingsTreeField,
   SettingsTreeNode,
 } from "@foxglove/studio-base/components/SettingsTreeEditor/types";
 import { usePanelSettingsTreeUpdate } from "@foxglove/studio-base/providers/PanelSettingsEditorContextProvider";
@@ -112,13 +111,10 @@ function buildSettingsTree(
   allMarkerTopics: readonly string[],
   enabledMarkerTopics: readonly string[],
 ): SettingsTreeNode {
-  const markerFields: Record<string, SettingsTreeField> = Object.fromEntries(
+  const markerFields: Record<string, SettingsTreeNode> = Object.fromEntries(
     [...allMarkerTopics]
       .sort()
-      .map((topic) => [
-        topic,
-        { input: "boolean", label: topic, value: enabledMarkerTopics.includes(topic) },
-      ]),
+      .map((topic) => [topic, { label: topic, visible: enabledMarkerTopics.includes(topic) }]),
   );
 
   return {
@@ -177,7 +173,7 @@ function buildSettingsTree(
     children: {
       markers: {
         label: "Markers",
-        fields: markerFields,
+        children: markerFields,
       },
     },
   };
