@@ -59,8 +59,8 @@ export default function AccountInfo(props: { currentUser?: User }): JSX.Element 
               },
             }}
           />
-          <Stack justifyContent="center" gap={0.5}>
-            <Typography variant="h6">{props.currentUser.email}</Typography>
+          <Stack justifyContent="center">
+            <Typography variant="subtitle1">{props.currentUser.email}</Typography>
             <Typography variant="body2" color="text.secondary">
               {props.currentUser.orgDisplayName ?? props.currentUser.orgSlug}
             </Typography>
