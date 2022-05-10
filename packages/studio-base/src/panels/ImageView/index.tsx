@@ -18,16 +18,12 @@ import produce from "immer";
 import { difference, set, union } from "lodash";
 import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 
-import { Topic } from "@foxglove/studio";
 import { useDataSourceInfo } from "@foxglove/studio-base/PanelAPI";
 import { useMessagePipeline } from "@foxglove/studio-base/components/MessagePipeline";
 import Panel from "@foxglove/studio-base/components/Panel";
 import { usePanelContext } from "@foxglove/studio-base/components/PanelContext";
 import PanelToolbar from "@foxglove/studio-base/components/PanelToolbar";
-import {
-  SettingsTreeAction,
-  SettingsTreeNode,
-} from "@foxglove/studio-base/components/SettingsTreeEditor/types";
+import { SettingsTreeAction } from "@foxglove/studio-base/components/SettingsTreeEditor/types";
 import { usePanelSettingsTreeUpdate } from "@foxglove/studio-base/providers/PanelSettingsEditorContextProvider";
 import inScreenshotTests from "@foxglove/studio-base/stories/inScreenshotTests";
 import { CameraInfo } from "@foxglove/studio-base/types/Messages";
@@ -40,6 +36,7 @@ import { useCameraInfo, ANNOTATION_DATATYPES, useImagePanelMessages } from "./ho
 import helpContent from "./index.help.md";
 import { NORMALIZABLE_IMAGE_DATATYPES } from "./lib/normalizeMessage";
 import { getRelatedMarkerTopics, getMarkerOptions } from "./lib/util";
+import { buildSettingsTree } from "./settings";
 import type { Config, SaveImagePanelConfig, PixelData } from "./types";
 
 type Props = {
@@ -101,83 +98,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: "absolute",
   },
 }));
-
-function buildSettingsTree(
-  config: Config,
-  imageTopics: readonly Topic[],
-  allMarkerTopics: readonly string[],
-  enabledMarkerTopics: readonly string[],
-): SettingsTreeNode {
-  const markerFields: Record<string, SettingsTreeNode> = Object.fromEntries(
-    [...allMarkerTopics]
-      .sort()
-      .map((topic) => [topic, { label: topic, visible: enabledMarkerTopics.includes(topic) }]),
-  );
-
-  return {
-    label: "General",
-    fields: {
-      cameraTopic: {
-        label: "Camera Topic",
-        input: "select",
-        value: config.cameraTopic,
-        options: imageTopics.map((topic) => ({ label: topic.name, value: topic.name })),
-      },
-      transformMarkers: {
-        input: "boolean",
-        label: "Synchronize Markers",
-        value: config.transformMarkers,
-        help: config.transformMarkers
-          ? "Markers are being transformed by Foxglove Studio based on the camera model. Click to turn it off."
-          : `Markers can be transformed by Foxglove Studio based on the camera model. Click to turn it on.`,
-      },
-      smooth: {
-        input: "boolean",
-        label: "Bilinear Smoothing",
-        value: config.smooth ?? false,
-      },
-      flipHorizontal: {
-        input: "boolean",
-        label: "Flip Horizontal",
-        value: config.flipHorizontal ?? false,
-      },
-      flipVertical: {
-        input: "boolean",
-        label: "Flip Vertical",
-        value: config.flipVertical ?? false,
-      },
-      rotation: {
-        input: "select",
-        label: "Rotation",
-        value: config.rotation ?? 0,
-        options: [
-          { label: "0°", value: 0 },
-          { label: "90°", value: 90 },
-          { label: "180°", value: 180 },
-          { label: "270°", value: 270 },
-        ],
-      },
-      minValue: {
-        input: "number",
-        label: "Minimum Value (depth images)",
-        placeholder: "0",
-        value: config.minValue,
-      },
-      maxValue: {
-        input: "number",
-        label: "Maximum Value (depth images)",
-        placeholder: "10000",
-        value: config.maxValue,
-      },
-    },
-    children: {
-      markers: {
-        label: "Markers",
-        children: markerFields,
-      },
-    },
-  };
-}
 
 const BottomBar = ({ children }: { children?: React.ReactNode }) => {
   const classes = useStyles();
