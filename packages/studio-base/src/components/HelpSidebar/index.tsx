@@ -147,18 +147,20 @@ export default function HelpSidebar({
     >
       <Stack>
         {isHomeView ? (
-          <Stack gap={2}>
+          <Stack gap={1.5}>
             {sectionKeys.map((key: SectionKey) => {
               const { subheader, links = [] } = sections.get(key) ?? {};
               return (
                 <div key={subheader}>
-                  <Typography variant="overline" display="block">
+                  <Typography color="text.secondary" variant="overline" display="block">
                     {subheader}
                   </Typography>
-                  <Stack paddingY={2} gap={1}>
+                  <Stack paddingY={2} gap={0.75}>
                     {links.map(({ title, url, content }: HelpInfo) => (
                       <Link
+                        color="inherit"
                         variant="body2"
+                        underline="hover"
                         key={title}
                         data-test={title}
                         href={url}
