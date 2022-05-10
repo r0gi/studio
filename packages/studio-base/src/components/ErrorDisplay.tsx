@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(1),
   },
   actions: {
+    flex: "auto",
     paddingTop: theme.spacing(2),
     textAlign: "right",
   },
