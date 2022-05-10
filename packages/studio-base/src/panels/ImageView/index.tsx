@@ -215,8 +215,6 @@ function ImageView(props: Props) {
     synchronize: shouldSynchronize,
   });
 
-  const rootRef = useRef<HTMLDivElement>(ReactNull);
-
   const lastImageMessageRef = useRef(image);
   if (image) {
     lastImageMessageRef.current = image;
@@ -261,19 +259,7 @@ function ImageView(props: Props) {
 
   return (
     <Stack flex="auto" overflow="hidden" position="relative">
-      {/*
-      HACK:
-      When the floating panel toolbar disappears, it also removes the anchor elements for
-      the dropdown menus. When the anchor element is removed, the dropdown menu re-positions to a
-      different part of the screen. To prevent the re-positioning of the open menu, we use an empty
-      div as the anchor for our annotation dropdown. This keeps the annotation dropdown stable even
-      when the toolbar goes away.
-
-      The image topic dropdown does not need the anchor because it closes after an image is selected.
-      The annotation dropdown allows multiple selection and remains open.
-      */}
-      <div ref={rootRef}></div>
-      <PanelToolbar floating={cameraTopic !== ""} helpContent={helpContent} />
+      <PanelToolbar floating helpContent={helpContent} />
       <Stack width="100%" height="100%">
         {/* Always render the ImageCanvas because it's expensive to unmount and start up. */}
         {imageMessageToRender && (
