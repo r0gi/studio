@@ -301,9 +301,9 @@ export default function Preferences(): React.ReactElement {
 
   return (
     <SidebarContent title="Preferences">
-      <Stack gap={3.75}>
-        <div>
-          <Typography component="h2" variant="h5" gutterBottom color="secondary">
+      <Stack gap={4}>
+        <section>
+          <Typography component="h2" variant="h5" gutterBottom color="primary">
             General
           </Typography>
           <Stack gap={1}>
@@ -330,9 +330,10 @@ export default function Preferences(): React.ReactElement {
               </div>
             )}
           </Stack>
-        </div>
-        <div>
-          <Typography component="h2" variant="h5" gutterBottom color="secondary">
+        </section>
+
+        <section>
+          <Typography component="h2" variant="h5" gutterBottom color="primary">
             ROS
           </Typography>
           <Stack gap={1}>
@@ -340,9 +341,10 @@ export default function Preferences(): React.ReactElement {
               <RosPackagePath />
             </div>
           </Stack>
-        </div>
-        <div>
-          <Typography component="h2" variant="h5" gutterBottom color="secondary">
+        </section>
+
+        <section>
+          <Typography component="h2" variant="h5" gutterBottom color="primary">
             Privacy
           </Typography>
           <Stack gap={1}>
@@ -360,9 +362,10 @@ export default function Preferences(): React.ReactElement {
               label="Send anonymized crash reports"
             />
           </Stack>
-        </div>
-        <div>
-          <Typography component="h2" variant="h5" gutterBottom color="secondary">
+        </section>
+
+        <section>
+          <Typography component="h2" variant="h5" gutterBottom color="primary">
             Experimental features
           </Typography>
           <Stack gap={1}>
@@ -371,7 +374,7 @@ export default function Preferences(): React.ReactElement {
             </Typography>
             <ExperimentalFeatureSettings />
           </Stack>
-        </div>
+        </section>
       </Stack>
     </SidebarContent>
   );
