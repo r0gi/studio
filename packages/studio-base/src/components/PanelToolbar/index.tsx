@@ -48,7 +48,9 @@ const PanelToolbarRoot = muiStyled("div", {
   flex: "0 0 auto",
   justifyContent: "flex-end",
   padding: theme.spacing(0.5),
-  display: !shouldShow ? "none" : "flex",
+  display: "flex",
+  visibility: shouldShow ? "visible" : "hidden",
+  pointerEvents: shouldShow ? "auto" : "none",
   backgroundColor: floating ? "transparent" : theme.palette.background.paper,
 
   ...(floating && {

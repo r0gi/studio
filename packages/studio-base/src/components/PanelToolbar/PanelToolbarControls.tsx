@@ -34,10 +34,10 @@ type PanelToolbarControlsProps = {
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
-  iconContainer: ({ shouldShow }: { shouldShow: boolean }) => ({
+  iconContainer: ({ floating, shouldShow }: { floating: boolean; shouldShow: boolean }) => ({
     paddingTop: theme.spacing(0.5),
     display: "flex",
-    visibility: shouldShow ? "visible" : "hidden",
+    visibility: !floating ? (shouldShow ? "visible" : "hidden") : undefined,
     flex: "0 0 auto",
     alignItems: "center",
     marginLeft: theme.spacing(0.5),
@@ -70,7 +70,7 @@ export const PanelToolbarControls = React.memo(function PanelToolbarControls({
 }: PanelToolbarControlsProps) {
   const shouldShow = showControls ? true : floating ? true : mousePresent;
   const panelContext = useContext(PanelContext);
-  const styles = useStyles({ shouldShow });
+  const styles = useStyles({ floating, shouldShow });
 
   return (
     <div className={styles.iconContainer}>
