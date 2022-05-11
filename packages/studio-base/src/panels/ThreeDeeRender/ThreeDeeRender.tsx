@@ -40,18 +40,15 @@ import {
   OccupancyGrid,
   OCCUPANCY_GRID_DATATYPES,
 } from "./ros";
-import { buildSettingsTree, SelectEntry, ThreeDeeRenderConfig } from "./settings";
+import {
+  buildSettingsTree,
+  LayerType,
+  SelectEntry,
+  SUPPORTED_DATATYPES,
+  ThreeDeeRenderConfig,
+} from "./settings";
 
 const SHOW_DEBUG: true | false = false;
-
-const SUPPORTED_DATATYPES = new Set<string>();
-mergeSetInto(SUPPORTED_DATATYPES, TRANSFORM_STAMPED_DATATYPES);
-mergeSetInto(SUPPORTED_DATATYPES, TF_DATATYPES);
-mergeSetInto(SUPPORTED_DATATYPES, MARKER_DATATYPES);
-mergeSetInto(SUPPORTED_DATATYPES, MARKER_ARRAY_DATATYPES);
-mergeSetInto(SUPPORTED_DATATYPES, OCCUPANCY_GRID_DATATYPES);
-mergeSetInto(SUPPORTED_DATATYPES, POINTCLOUD_DATATYPES);
-
 const DEFAULT_FRAME_IDS = ["base_link", "odom", "map", "earth"];
 
 const log = Logger.getLogger(__filename);
@@ -179,11 +176,13 @@ export function ThreeDeeRender({ context }: { context: PanelExtensionContext }):
 
     return {
       cameraState,
-      enableStats: partialConfig?.enableStats ?? true,
       followTf: partialConfig?.followTf,
+      scene: partialConfig?.scene ?? {},
+      topics: partialConfig?.topics ?? {},
     };
   });
   const { cameraState, followTf: configFollowTf } = config;
+  const backgroundColor = config.scene.backgroundColor;
 
   const [canvas, setCanvas] = useState<HTMLCanvasElement | ReactNull>(ReactNull);
   const [renderer, setRenderer] = useState<Renderer | ReactNull>(ReactNull);
@@ -202,13 +201,44 @@ export function ThreeDeeRender({ context }: { context: PanelExtensionContext }):
   }, []);
   const [cameraStore] = useState(() => new CameraStore(setCameraState, cameraState));
 
-  const actionHandler = useCallback((action: SettingsTreeAction) => {
-    setConfig((oldConfig) =>
-      produce(oldConfig, (draft) => {
-        set(draft, action.payload.path, action.payload.value);
-      }),
-    );
-  }, []);
+  // Build a map from topic name to datatype
+  const topicsToDatatypes = useMemo(() => {
+    const map = new Map<string, string>();
+    if (!topics) {
+      return map;
+    }
+    for (const topic of topics) {
+      map.set(topic.name, topic.datatype);
+    }
+    return map;
+  }, [topics]);
+
+  // Build a map from (renderable) topic name to LayerType enum
+  const topicsToLayerTypes = useMemo(() => buildTopicsToLayerTypes(topics), [topics]);
+
+  // Handle user changes in the settings sidebar
+  const actionHandler = useCallback(
+    (action: SettingsTreeAction) => {
+      setConfig((oldConfig) => {
+        const newConfig = produce(oldConfig, (draft) => {
+          set(draft, action.payload.path, action.payload.value);
+        });
+
+        // If a topic setting was changed, inform the renderer about it and
+        // draw a new frame
+        if (renderer && action.payload.path[0] === "topics") {
+          const topic = action.payload.path[1]!;
+          const layerType = topicsToLayerTypes.get(topic);
+          if (layerType != undefined) {
+            updateTopicSettings(renderer, topic, layerType, newConfig);
+          }
+        }
+
+        return newConfig;
+      });
+    },
+    [renderer, topicsToLayerTypes],
+  );
 
   // Maintain a list of coordinate frames for the settings sidebar
   const [coordinateFrames, setCoordinateFrames] = useState<SelectEntry[]>(
@@ -232,22 +262,49 @@ export function ThreeDeeRender({ context }: { context: PanelExtensionContext }):
     return () => void renderer?.removeListener("transformTreeUpdated", updateCoordinateFrames);
   }, [renderer, updateCoordinateFrames]);
 
+  // Set the rendering frame (aka followTf) based on the configured frame, falling back to a
+  // heuristically chosen best frame for the current scene (defaultFrame)
   const followTf = useMemo(
-    () => (configFollowTf ? configFollowTf : defaultFrame),
+    () => (configFollowTf != undefined ? configFollowTf : defaultFrame),
     [configFollowTf, defaultFrame],
   );
+
+  const fieldsProviders = renderer?.settingsFieldsProviders;
 
   useEffect(() => {
     // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/no-explicit-any
     (context as unknown as any).__updatePanelSettingsTree({
       actionHandler,
-      settings: buildSettingsTree(config, coordinateFrames, followTf, topics ?? []),
+      settings: buildSettingsTree({
+        config,
+        coordinateFrames,
+        followTf,
+        topics: topics ?? [],
+        topicsToLayerTypes,
+        fieldsProviders: fieldsProviders ?? new Map(),
+      }),
     });
-  }, [actionHandler, config, context, coordinateFrames, followTf, topics]);
+  }, [
+    actionHandler,
+    config,
+    context,
+    coordinateFrames,
+    fieldsProviders,
+    followTf,
+    topics,
+    topicsToLayerTypes,
+  ]);
 
-  // Config followTf
+  // Update the renderer's reference to `config` when it changes
   useEffect(() => {
-    if (renderer && followTf != undefined) {
+    if (renderer) {
+      renderer.config = config;
+    }
+  }, [config, renderer]);
+
+  // Update renderer and draw a new frame when followTf changes
+  useEffect(() => {
+    if (renderer?.config && followTf != undefined) {
       renderer.renderFrameId = followTf;
       renderer.animationFrame();
     }
@@ -310,18 +367,6 @@ export function ThreeDeeRender({ context }: { context: PanelExtensionContext }):
     context.watch("currentFrame");
   }, [context]);
 
-  // Build a map from topic name to datatype
-  const topicsToDatatypes = useMemo(() => {
-    const map = new Map<string, string>();
-    if (!topics) {
-      return map;
-    }
-    for (const topic of topics) {
-      map.set(topic.name, topic.datatype);
-    }
-    return map;
-  }, [topics]);
-
   // Build a list of topics to subscribe to
   const topicsToSubscribe = useMemo(() => {
     const subscriptionList: string[] = [];
@@ -360,11 +405,13 @@ export function ThreeDeeRender({ context }: { context: PanelExtensionContext }):
     }
   }, [currentTime, renderer]);
 
+  // Keep the renderer colorScheme and backgroundColor up to date
   useEffect(() => {
     if (colorScheme && renderer) {
-      renderer.setColorScheme(colorScheme);
+      renderer.setColorScheme(colorScheme, backgroundColor);
+      renderer.animationFrame();
     }
-  }, [colorScheme, renderer]);
+  }, [backgroundColor, colorScheme, renderer]);
 
   // Handle messages and render a frame if the camera has moved or new messages
   // are available
@@ -446,16 +493,10 @@ export function ThreeDeeRender({ context }: { context: PanelExtensionContext }):
         <canvas ref={setCanvas} style={{ position: "absolute", top: 0, left: 0 }} />
       </CameraListener>
       <RendererContext.Provider value={renderer}>
-        <RendererOverlay colorScheme={colorScheme} enableStats={config.enableStats} />
+        <RendererOverlay colorScheme={colorScheme} enableStats={config.scene.enableStats ?? true} />
       </RendererContext.Provider>
     </div>
   );
-}
-
-function mergeSetInto(output: Set<string>, input: ReadonlySet<string>) {
-  for (const value of input) {
-    output.add(value);
-  }
 }
 
 function coordinateFrameList(renderer: Renderer | ReactNull | undefined): SelectEntry[] {
@@ -510,4 +551,53 @@ function coordinateFrameList(renderer: Renderer | ReactNull | undefined): Select
   }
 
   return output;
+}
+
+function buildTopicsToLayerTypes(topics: ReadonlyArray<Topic> | undefined): Map<string, LayerType> {
+  const map = new Map<string, LayerType>();
+  if (!topics) {
+    return map;
+  }
+  for (const topic of topics) {
+    const datatype = topic.datatype;
+    if (SUPPORTED_DATATYPES.has(datatype)) {
+      if (TF_DATATYPES.has(datatype) || TRANSFORM_STAMPED_DATATYPES.has(datatype)) {
+        map.set(topic.name, LayerType.Transform);
+      } else if (MARKER_DATATYPES.has(datatype) || MARKER_ARRAY_DATATYPES.has(datatype)) {
+        map.set(topic.name, LayerType.Marker);
+      } else if (OCCUPANCY_GRID_DATATYPES.has(datatype)) {
+        map.set(topic.name, LayerType.OccupancyGrid);
+      } else if (POINTCLOUD_DATATYPES.has(datatype)) {
+        map.set(topic.name, LayerType.PointCloud);
+      }
+    }
+  }
+  return map;
+}
+
+function updateTopicSettings(
+  renderer: Renderer,
+  topic: string,
+  layerType: LayerType,
+  config: ThreeDeeRenderConfig,
+) {
+  const topicConfig = config.topics[topic];
+  if (!topicConfig) {
+    return;
+  }
+
+  switch (layerType) {
+    case LayerType.Transform:
+      throw new Error(`Attempted to update topic settings for Transform "${topic}"`);
+    case LayerType.Marker:
+      renderer.setMarkerSettings(topic, topicConfig);
+      break;
+    case LayerType.OccupancyGrid:
+      renderer.setOccupancyGridSettings(topic, topicConfig);
+      break;
+    case LayerType.PointCloud:
+      renderer.setPointCloud2Settings(topic, topicConfig);
+      break;
+  }
+  renderer.animationFrame();
 }

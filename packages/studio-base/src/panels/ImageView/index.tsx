@@ -18,7 +18,7 @@ import { makeStyles } from "@mui/styles";
 import cx from "classnames";
 import produce from "immer";
 import { set } from "lodash";
-import { useEffect, useState, useMemo, useCallback, useRef, useContext } from "react";
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 
 import { useDataSourceInfo } from "@foxglove/studio-base/PanelAPI";
 import Icon from "@foxglove/studio-base/components/Icon";
@@ -30,8 +30,9 @@ import {
   SettingsTreeAction,
   SettingsTreeNode,
 } from "@foxglove/studio-base/components/SettingsTreeEditor/types";
-import { PanelSettingsEditorContext } from "@foxglove/studio-base/context/PanelSettingsEditorContext";
+import { usePanelSettingsTreeUpdate } from "@foxglove/studio-base/providers/PanelSettingsEditorContextProvider";
 import inScreenshotTests from "@foxglove/studio-base/stories/inScreenshotTests";
+import { CameraInfo } from "@foxglove/studio-base/types/Messages";
 import { mightActuallyBePartial } from "@foxglove/studio-base/util/mightActuallyBePartial";
 import { getTopicsByTopicName } from "@foxglove/studio-base/util/selectors";
 import { formatTimeRaw } from "@foxglove/studio-base/util/time";
@@ -178,7 +179,7 @@ function ImageView(props: Props) {
     [cameraTopic, topics],
   );
   const [activePixelData, setActivePixelData] = useState<PixelData | undefined>();
-  const { updatePanelSettingsTree } = useContext(PanelSettingsEditorContext);
+  const updatePanelSettingsTree = usePanelSettingsTreeUpdate();
   const { id: panelId } = usePanelContext();
 
   const allImageTopics = useMemo(() => {
@@ -344,7 +345,9 @@ function ImageView(props: Props) {
     return {
       markers: annotations ?? [],
       transformMarkers,
-      cameraInfo,
+      // Convert to plain object before sending to web worker
+      cameraInfo:
+        (cameraInfo as { toJSON?: () => CameraInfo } | undefined)?.toJSON?.() ?? cameraInfo,
     };
   }, [annotations, cameraInfo, transformMarkers]);
 
