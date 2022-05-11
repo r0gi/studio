@@ -378,10 +378,8 @@ export function ThreeDeeRender({ context }: { context: PanelExtensionContext }):
       // Subscribe to all transform topics
       if (TF_DATATYPES.has(topic.datatype) || TRANSFORM_STAMPED_DATATYPES.has(topic.datatype)) {
         subscriptionList.push(topic.name);
-      }
-
-      // TODO: Allow disabling of subscriptions to non-TF topics
-      if (SUPPORTED_DATATYPES.has(topic.datatype)) {
+      } else if (SUPPORTED_DATATYPES.has(topic.datatype)) {
+        // TODO: Allow disabling of subscriptions to non-TF topics
         subscriptionList.push(topic.name);
       }
     }
