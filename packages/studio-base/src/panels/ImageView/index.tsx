@@ -393,6 +393,13 @@ function ImageView(props: Props) {
 
   const showEmptyState = !image;
 
+  const setPanZoom = useCallback(
+    (panZoom: Pick<Config, "zoom" | "pan" | "mode">) => {
+      saveConfig(panZoom);
+    },
+    [saveConfig],
+  );
+
   return (
     <Stack flex="auto" overflow="hidden" position="relative">
       {/*
@@ -412,7 +419,7 @@ function ImageView(props: Props) {
         floating={cameraTopic !== ""}
         additionalIcons={
           <Stack direction="row">
-            <ZoomMenu />
+            <ZoomMenu zoom={config.zoom ?? 1} setPanZoom={setPanZoom} />
           </Stack>
         }
       >
