@@ -35,6 +35,15 @@ export type MutablePoint2D = {
 };
 export type Point2D = Readonly<MutablePoint2D>;
 
+export type Matrix3 = [number, number, number, number, number, number, number, number, number];
+
+// prettier-ignore
+export type Matrix3x4 = [
+  number, number, number, number,
+  number, number, number, number,
+  number, number, number, number,
+];
+
 export type Header = Readonly<{
   frame_id: string;
   stamp: Time;

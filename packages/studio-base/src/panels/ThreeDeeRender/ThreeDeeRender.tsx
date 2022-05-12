@@ -28,6 +28,7 @@ import { Renderer } from "./Renderer";
 import { RendererContext, useRenderer, useRendererEvent } from "./RendererContext";
 import { Stats } from "./Stats";
 import {
+  normalizeCameraInfo,
   normalizeMarker,
   normalizePoseStamped,
   normalizePoseWithCovarianceStamped,
@@ -47,6 +48,8 @@ import {
   POSE_WITH_COVARIANCE_STAMPED_DATATYPES,
   PoseStamped,
   PoseWithCovarianceStamped,
+  CameraInfo,
+  CAMERA_INFO_DATATYPES,
 } from "./ros";
 import {
   buildSettingsTree,
@@ -474,6 +477,9 @@ export function ThreeDeeRender({ context }: { context: PanelExtensionContext }):
           message.message as DeepPartial<PoseWithCovarianceStamped>,
         );
         renderer.addPoseMessage(message.topic, poseMessage);
+      } else if (CAMERA_INFO_DATATYPES.has(datatype)) {
+        const cameraInfo = normalizeCameraInfo(message.message as DeepPartial<CameraInfo>);
+        renderer.addCameraInfoMessage(message.topic, cameraInfo);
       }
     }
 
@@ -588,6 +594,8 @@ function buildTopicsToLayerTypes(topics: ReadonlyArray<Topic> | undefined): Map<
         POSE_WITH_COVARIANCE_STAMPED_DATATYPES.has(datatype)
       ) {
         map.set(topic.name, LayerType.Pose);
+      } else if (CAMERA_INFO_DATATYPES.has(datatype)) {
+        map.set(topic.name, LayerType.CameraInfo);
       }
     }
   }
@@ -619,6 +627,9 @@ function updateTopicSettings(
       break;
     case LayerType.Pose:
       renderer.setPoseSettings(topic, topicConfig);
+      break;
+    case LayerType.CameraInfo:
+      renderer.setCameraInfoSettings(topic, topicConfig);
       break;
   }
   renderer.animationFrame();

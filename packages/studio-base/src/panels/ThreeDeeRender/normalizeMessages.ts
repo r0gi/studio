@@ -17,6 +17,7 @@ import {
   PoseWithCovarianceStamped,
   PoseWithCovariance,
   Matrix6,
+  CameraInfo,
 } from "./ros";
 
 export function normalizeTime(time: Partial<Time> | undefined): Time {
@@ -132,5 +133,32 @@ export function normalizePoseWithCovarianceStamped(
   return {
     header: normalizeHeader(message.header),
     pose: normalizePoseWithCovariance(message.pose),
+  };
+}
+
+export function normalizeCameraInfo(message: DeepPartial<CameraInfo>): CameraInfo {
+  return {
+    // header: Header;
+    // height: number;
+    // width: number;
+    // distortion_model: string;
+    // D: number[];
+    // K: Matrix3;
+    // R: Matrix3;
+    // P: Matrix3x4;
+    // binning_x: number;
+    // binning_y: number;
+    // roi: {
+    //   x_offset: number;
+    //   y_offset: number;
+    //   height: number;
+    //   width: number;
+    //   do_rectify: boolean;
+    // };
+    header: normalizeHeader(message.header),
+    height: message.height ?? 0,
+    width: message.width ?? 0,
+    distortion_model: message.distortion_model ?? "",
+    // FIXME: Should this throw? Or need StatusOr<>?
   };
 }
