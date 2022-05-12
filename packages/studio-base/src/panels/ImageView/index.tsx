@@ -13,7 +13,7 @@
 
 import { useTheme } from "@fluentui/react";
 import WavesIcon from "@mdi/svg/svg/waves.svg";
-import { Stack, Theme } from "@mui/material";
+import { Divider, Stack, Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import cx from "classnames";
 import produce from "immer";
