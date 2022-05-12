@@ -82,7 +82,7 @@ const ActionsOverlay = muiStyled("div")`
   font-size: 14px;
   padding-top: 24px;
 
-  ${PanelRoot}:hover > & {
+  ${PanelRoot.toString()}:hover > & {
     background-color: ${({ theme }) => theme.palette.background.default};
     display: flex;
     align-items: center;
