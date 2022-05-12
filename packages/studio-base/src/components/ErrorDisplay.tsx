@@ -119,7 +119,7 @@ function ErrorDisplay(props: ErrorDisplayProps): JSX.Element {
   return (
     <Stack fullHeight padding={2} overflow="auto">
       <Stack flexGrow={1}>
-        <Typography variant="h4">
+        <Typography variant="h4" gutterBottom>
           {props.title ?? "The app encountered an unexpected error"}
         </Typography>
         <Stack gap={2}>
