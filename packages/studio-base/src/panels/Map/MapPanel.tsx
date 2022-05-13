@@ -150,11 +150,10 @@ function MapPanel(props: MapPanelProps): JSX.Element {
 
   const [customLayer] = useState(
     new TileLayer("https://example.com/{z}/{y}/{x}", {
-        attribution: "",
-        maxNativeZoom: 20,
-        maxZoom: 24,
-      },
-    ),
+      attribution: "",
+      maxNativeZoom: 20,
+      maxZoom: 24,
+    }),
   );
 
   // Panel state management to update our set of messages
@@ -252,7 +251,7 @@ function MapPanel(props: MapPanelProps): JSX.Element {
     if (config.layer === "custom") {
       // validate URL to avoid leaflet map placeholder variable error
       const placeholders = config.customUrl.match(/\{.+?\}/g) ?? [];
-      const valid_placeholders = ['{x}', '{y}', '{z}'];
+      const valid_placeholders = ["{x}", "{y}", "{z}"];
       for (const placeholder of placeholders) {
         if (!valid_placeholders.includes(placeholder)) {
           return;
@@ -260,7 +259,7 @@ function MapPanel(props: MapPanelProps): JSX.Element {
       }
       customLayer.setUrl(config.customUrl);
     }
-  }, [config.layer, config.customUrl, customLayer])
+  }, [config.layer, config.customUrl, customLayer]);
 
   // Subscribe to eligible and enabled topics
   useEffect(() => {
