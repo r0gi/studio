@@ -149,9 +149,7 @@ function MapPanel(props: MapPanelProps): JSX.Element {
   );
 
   const [customLayer] = useState(
-    new TileLayer(
-      "https://example.com/{z}/{y}/{x}",
-      {
+    new TileLayer("https://example.com/{z}/{y}/{x}", {
         attribution: "",
         maxNativeZoom: 20,
         maxZoom: 24,
@@ -248,21 +246,21 @@ function MapPanel(props: MapPanelProps): JSX.Element {
       currentMap?.removeLayer(tileLayer);
       currentMap?.removeLayer(satelliteLayer);
     }
-  }, [config.layer, currentMap, satelliteLayer, tileLayer]);
+  }, [config.layer, currentMap, customLayer, satelliteLayer, tileLayer]);
 
   useEffect(() => {
     if (config.layer === "custom") {
       // validate URL to avoid leaflet map placeholder variable error
       const placeholders = config.customUrl.match(/\{.+?\}/g) ?? [];
       const valid_placeholders = ['{x}', '{y}', '{z}'];
-      for(let placeholder of placeholders){
-        if(!valid_placeholders.includes(placeholder)){
+      for (const placeholder of placeholders) {
+        if (!valid_placeholders.includes(placeholder)) {
           return;
         }
       }
       customLayer.setUrl(config.customUrl);
     }
-  }, [config.layer, config.customUrl])
+  }, [config.layer, config.customUrl, customLayer])
 
   // Subscribe to eligible and enabled topics
   useEffect(() => {
