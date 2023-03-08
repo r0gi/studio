@@ -411,7 +411,12 @@ function MapPanel(props: MapPanelProps): JSX.Element {
       }
 
       if (renderState.allFrames) {
-        setAllMapMessages(renderState.allFrames.filter(isValidMapMessage));
+        setAllMapMessages((oldAllMapMessages) => {
+          const newAllMapMessages = renderState.allFrames!.filter(isValidMapMessage);
+          return isEqual(oldAllMapMessages, newAllMapMessages)
+            ? oldAllMapMessages
+            : newAllMapMessages ?? [];
+        });
       }
 
       // Only update the current frame if we have new messages.
