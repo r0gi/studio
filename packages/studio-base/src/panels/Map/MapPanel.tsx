@@ -14,6 +14,7 @@ import {
   TileLayer,
 } from "leaflet";
 import { difference, groupBy, isEqual, minBy, partition, union } from "lodash";
+import memoizeWeak from "memoize-weak";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { useDebouncedCallback } from "use-debounce";
@@ -88,6 +89,10 @@ function isSupportedSchema(schemaName: string) {
       return false;
   }
 }
+
+const memoizedFilterMessages = memoizeWeak((msgs: readonly MessageEvent<unknown>[]) =>
+  msgs.filter(isValidMapMessage),
+);
 
 function MapPanel(props: MapPanelProps): JSX.Element {
   const { context } = props;
@@ -411,12 +416,7 @@ function MapPanel(props: MapPanelProps): JSX.Element {
       }
 
       if (renderState.allFrames) {
-        setAllMapMessages((oldAllMapMessages) => {
-          const newAllMapMessages = renderState.allFrames!.filter(isValidMapMessage);
-          return isEqual(oldAllMapMessages, newAllMapMessages)
-            ? oldAllMapMessages
-            : newAllMapMessages ?? [];
-        });
+        setAllMapMessages(memoizedFilterMessages(renderState.allFrames));
       }
 
       // Only update the current frame if we have new messages.

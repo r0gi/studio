@@ -1626,7 +1626,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.18.6, @babel/runtime@npm:^7.19.4, @babel/runtime@npm:^7.20.13, @babel/runtime@npm:^7.20.6, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.5.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.1.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.17.8, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.18.6, @babel/runtime@npm:^7.19.4, @babel/runtime@npm:^7.20.6, @babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.5.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.21.0
   resolution: "@babel/runtime@npm:7.21.0"
   dependencies:
@@ -2508,7 +2508,7 @@ __metadata:
     "@types/uuid": 9.0.1
     "@types/wicg-file-system-access": 2020.9.5
     "@uiw/react-textarea-code-editor": 2.1.1
-    amplitude-js: 8.21.4
+    amplitude-js: 8.21.6
     babel-jest: 29.5.0
     babel-plugin-transform-import-meta: 2.2.0
     browserify-zlib: 0.2.0
@@ -2546,7 +2546,7 @@ __metadata:
     just-diff: 5.2.0
     leaflet: 1.9.3
     lodash: 4.17.21
-    mathjs: 11.5.1
+    mathjs: 11.6.0
     memoize-weak: 1.0.2
     meshoptimizer: 0.18.1
     moment: 2.29.4
@@ -2607,7 +2607,7 @@ __metadata:
     uuid: 9.0.0
     webpack: 5.75.0
     xacro-parser: 0.3.9
-    zustand: 4.3.3
+    zustand: 4.3.6
   languageName: unknown
   linkType: soft
 
@@ -8037,9 +8037,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"amplitude-js@npm:8.21.4":
-  version: 8.21.4
-  resolution: "amplitude-js@npm:8.21.4"
+"amplitude-js@npm:8.21.6":
+  version: 8.21.6
+  resolution: "amplitude-js@npm:8.21.6"
   dependencies:
     "@amplitude/analytics-connector": ^1.4.6
     "@amplitude/ua-parser-js": 0.7.31
@@ -8047,7 +8047,7 @@ __metadata:
     "@babel/runtime": ^7.20.6
     blueimp-md5: ^2.19.0
     query-string: 8.0.3
-  checksum: f8e7030fd70bbcabfda4fd56ee7656444257bf7f053461117abbb7b36596b2f5545571090f2d2bc928137a615815d07fc8d8338703c5122636d9d501cea6494e
+  checksum: a5a9c7dcd01106c8a5414b9f6bc12ce812e7fc159aadfa270129aa9f5552374a57c6864c59705b0d662d921b70cf1a23437479c17ecf729840cccb2faa760703
   languageName: node
   linkType: hard
 
@@ -8925,7 +8925,7 @@ __metadata:
     "@types/react-dom": 17.0.18
     clean-webpack-plugin: 4.0.0
     html-webpack-plugin: 5.5.0
-    mathjs: 11.5.1
+    mathjs: 11.6.0
     react: 17.0.2
     react-dom: 17.0.2
     webpack: 5.75.0
@@ -12544,9 +12544,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react@npm:7.32.1":
-  version: 7.32.1
-  resolution: "eslint-plugin-react@npm:7.32.1"
+"eslint-plugin-react@npm:7.32.2":
+  version: 7.32.2
+  resolution: "eslint-plugin-react@npm:7.32.2"
   dependencies:
     array-includes: ^3.1.6
     array.prototype.flatmap: ^1.3.1
@@ -12565,7 +12565,7 @@ __metadata:
     string.prototype.matchall: ^4.0.8
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
-  checksum: e20eab61161a3db6211c2bd1eb9be3e407fd14e72c06c5f39a078b6ac37427b2af6056ee70e3954249bca0a04088ae797a0c8ba909fb8802e29712de2a41262d
+  checksum: 2232b3b8945aa50b7773919c15cd96892acf35d2f82503667a79e2f55def90f728ed4f0e496f0f157acbe1bd4397c5615b676ae7428fe84488a544ca53feb944
   languageName: node
   linkType: hard
 
@@ -13596,7 +13596,7 @@ __metadata:
     eslint-plugin-import: 2.27.5
     eslint-plugin-jest: 27.2.1
     eslint-plugin-prettier: 4.2.1
-    eslint-plugin-react: 7.32.1
+    eslint-plugin-react: 7.32.2
     eslint-plugin-react-hooks: 4.6.0
     eslint-plugin-tss-unused-classes: 0.0.4
     jest: 29.4.0
@@ -17680,11 +17680,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mathjs@npm:11.5.1":
-  version: 11.5.1
-  resolution: "mathjs@npm:11.5.1"
+"mathjs@npm:11.6.0":
+  version: 11.6.0
+  resolution: "mathjs@npm:11.6.0"
   dependencies:
-    "@babel/runtime": ^7.20.13
+    "@babel/runtime": ^7.21.0
     complex.js: ^2.1.1
     decimal.js: ^10.4.3
     escape-latex: ^1.2.0
@@ -17695,7 +17695,7 @@ __metadata:
     typed-function: ^4.1.0
   bin:
     mathjs: bin/cli.js
-  checksum: 91faa49abfb864f721c90720852830a213f2d459a9b5f3943e8d67b45d4d3c462d0d698c68d00323d3e812699c579516a221f9c1eb1313961c3e411211534b7c
+  checksum: d6f5acc876d31d387e3aa9c5831192c68ad52f848bbaed361a9021595e65caed87a94057b6c48649dd671e811d7b77ecda7e2a7f9aa50c2e18d295c415bfa613
   languageName: node
   linkType: hard
 
@@ -26156,9 +26156,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:4.3.3":
-  version: 4.3.3
-  resolution: "zustand@npm:4.3.3"
+"zustand@npm:4.3.6":
+  version: 4.3.6
+  resolution: "zustand@npm:4.3.6"
   dependencies:
     use-sync-external-store: 1.2.0
   peerDependencies:
@@ -26169,7 +26169,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: fe0277ab0ce14849dea254cbdcfe83d4614364d38e616875f75ef2419f29085f5b03605efabeb33189a4557e647efaa294e0984c4f642e0566f445a7b207cdd6
+  checksum: 4d3cec03526f04ff3de6dc45b6f038c47f091836af9660fbf5f682cae1628221102882df20e4048dfe699a43f67424e5d6afc1116f3838a80eea5dd4f95ddaed
   languageName: node
   linkType: hard
 
