@@ -416,7 +416,7 @@ function MapPanel(props: MapPanelProps): JSX.Element {
       }
 
       if (renderState.allFrames) {
-      // use memoization to avoid re-filtering allFrames when it has not changed
+        // use memoization to avoid re-filtering allFrames when it has not changed
         setAllMapMessages(memoizedFilterMessages(renderState.allFrames));
       }
 
